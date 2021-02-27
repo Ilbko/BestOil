@@ -82,6 +82,7 @@ namespace BestOil
         }
         public void SecondGroup_Init()
         {
+            #region Работа с элементами второй группы
             cafe_group_payment.Controls.AddRange(new Control[] {cafe_label_payment,
                                                                 cafe_label_payment_text});
             group_cafe.Controls.Add(cafe_group_payment);
@@ -142,6 +143,8 @@ namespace BestOil
             cafe_label_amount_text.Size = new Size(40, cafe_label_amount_text.Size.Height);
 
             this.Controls.Add(group_cafe);
+
+            #endregion
         }
 
         public Form1()

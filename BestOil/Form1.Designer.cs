@@ -74,6 +74,17 @@ namespace BestOil
             cafe_label_payment_text = new Label();
             #endregion
 
+            #region Инициализация элементов третьей группы
+            group_pay = new GroupBox();
+
+            pay_picture = new PictureBox();
+
+            pay_button = new Button();
+
+            pay_label_payment = new Label();
+            pay_label_payment_text = new Label();
+            #endregion
+
             this.Load += Form_Load;
         }
 
@@ -116,12 +127,23 @@ namespace BestOil
         List<TextBox> cafe_textbox_price = new List<TextBox>(new TextBox[4] {new TextBox(), new TextBox(), new TextBox(), new TextBox()});
             Label cafe_label_price_text;
 
-        List<TextBox> cafe_textbox_amount = new List<TextBox>(new TextBox[4] { new TextBox(), new TextBox(), new TextBox(), new TextBox() });
+        List<TextBox> cafe_textbox_amount = new List<TextBox>(new TextBox[4] {new TextBox(), new TextBox(), new TextBox(), new TextBox()});
             Label cafe_label_amount_text;
 
         GroupBox cafe_group_payment;
         Label cafe_label_payment;
         Label cafe_label_payment_text;
+        #endregion
+
+        #region Третья группа элементов - "Оплата"
+        GroupBox group_pay;
+
+        PictureBox pay_picture;
+
+        Button pay_button;
+
+        Label pay_label_payment;
+            Label pay_label_payment_text;
         #endregion
     }
 }
