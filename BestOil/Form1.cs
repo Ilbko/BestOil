@@ -60,6 +60,7 @@ namespace BestOil
 
             station_radio_amount.Location = new Point(5, station_panel_radio.Size.Height / 8);
             station_radio_amount.Text = "Количество (л)";
+            station_radio_amount.Checked = true;
 
             station_textbox_amount.Location = new Point(station_radio_amount.Location.X + station_textbox_amount.Size.Width + 30, 110);
 
@@ -67,11 +68,13 @@ namespace BestOil
             station_radio_sum.Text = "Сумма (грн.)";
 
             station_textbox_sum.Location = new Point(station_radio_sum.Location.X + station_textbox_sum.Size.Width + 30, 150);
+            station_textbox_sum.Enabled = false;
 
             station_label_payment.Location = new Point(20, 20);
             station_label_payment.Size = new Size(station_group_payment.Size.Width - 60, station_group_payment.Size.Height - 40);
             station_label_payment.Font = new Font(FontFamily.GenericSansSerif, 30);
-            station_label_payment.Text = "ТЕСТ";
+            station_label_payment.TextAlign = ContentAlignment.MiddleRight;
+            station_label_payment.Text = "0,00";
 
             station_label_payment_text.Size = new Size(30, 20);
             station_label_payment_text.Location = new Point(station_label_payment.Size.Width + 20, station_label_payment.Location.Y);
@@ -105,7 +108,8 @@ namespace BestOil
             cafe_label_payment.Location = new Point(20, 20);
             cafe_label_payment.Size = new Size(cafe_group_payment.Size.Width - 60, cafe_group_payment.Size.Height - 40);
             cafe_label_payment.Font = new Font(FontFamily.GenericSansSerif, 30);
-            cafe_label_payment.Text = "ТЕСТ";
+            cafe_label_payment.TextAlign = ContentAlignment.MiddleRight;
+            cafe_label_payment.Text = "0,00";
 
             cafe_label_payment_text.Size = new Size(30, 20);
             cafe_label_payment_text.Location = new Point(cafe_label_payment.Size.Width + 20, cafe_label_payment.Location.Y);
@@ -121,12 +125,18 @@ namespace BestOil
             cafe_check_food[3].Text = "Кока-кола";
 
             cafe_check_food.ForEach(i => i.Location = new Point(loc.X, loc.Y += 30));
+            cafe_check_food.ForEach(i => i.CheckedChanged += CheckBox_CheckedChanged);
 
             loc.X = group_cafe.Size.Width / 2;
             loc.Y = 30;
 
             cafe_textbox_price.ForEach(i => i.Location = new Point(loc.X, loc.Y += 30));
             cafe_textbox_price.ForEach(i => i.Size = new Size(50, i.Size.Height));
+            cafe_textbox_price.ForEach(i => i.Enabled = false);
+            cafe_textbox_price[0].Text = "4,00";
+            cafe_textbox_price[1].Text = "5,40";
+            cafe_textbox_price[2].Text = "7,20";
+            cafe_textbox_price[3].Text = "4,40";
 
             cafe_label_price_text.Location = new Point(cafe_textbox_price[0].Location.X, cafe_textbox_price[0].Location.Y - 30);
             cafe_label_price_text.Text = "Цена";
@@ -137,6 +147,15 @@ namespace BestOil
 
             cafe_textbox_amount.ForEach(i => i.Location = new Point(loc.X, loc.Y += 30));
             cafe_textbox_amount.ForEach(i => i.Size = new Size(50, i.Size.Height));
+            cafe_textbox_amount.ForEach(i => i.Text = "0");
+            cafe_textbox_amount.ForEach(i => i.Enabled = false);
+            cafe_textbox_amount.ForEach(i => i.TextChanged += TextBox_TextChanged);
+            cafe_textbox_amount.ForEach(i => i.EnabledChanged += TextBox_EnabledChanged);
+
+            cafe_textbox_amount[0].Tag = 0;
+            cafe_textbox_amount[1].Tag = 1;
+            cafe_textbox_amount[2].Tag = 2;
+            cafe_textbox_amount[3].Tag = 3;
 
             cafe_label_amount_text.Location = new Point(cafe_textbox_amount[0].Location.X, cafe_textbox_amount[0].Location.Y - 30);
             cafe_label_amount_text.Text = "Кол.";
@@ -171,7 +190,8 @@ namespace BestOil
             pay_label_payment.Size = new Size(180, 60);
             pay_label_payment.Location = new Point(group_pay.Size.Width - pay_label_payment.Size.Width - 50, 20);
             pay_label_payment.Font = new Font(FontFamily.GenericSansSerif, 30);
-            pay_label_payment.Text = "ТЕСТ";
+            pay_label_payment.TextAlign = ContentAlignment.MiddleRight;
+            pay_label_payment.Text = "0,00";
             
             pay_label_payment_text.Size = new Size(30, 20);
             pay_label_payment_text.Location = new Point(group_pay.Size.Width - 50, 20);
@@ -191,6 +211,72 @@ namespace BestOil
             FirstGroup_Init();
             SecondGroup_Init();
             ThirdGroup_Init();
+        }
+
+        public void CheckBox_CheckedChanged(object sender, EventArgs argv)
+        {
+            if ((sender as CheckBox).Text == "Хот-дог" && cafe_textbox_amount[0].Enabled == false)
+            {
+                cafe_textbox_amount[0].Enabled = true;
+            }
+            else if ((sender as CheckBox).Text == "Хот-дог") 
+            {
+                cafe_textbox_amount[0].Enabled = false;
+            }
+
+            if ((sender as CheckBox).Text == "Гамбургер" && cafe_textbox_amount[1].Enabled == false)
+            {
+                cafe_textbox_amount[1].Enabled = true;
+            }
+            else if ((sender as CheckBox).Text == "Гамбургер")
+            {
+                cafe_textbox_amount[1].Enabled = false;
+            }
+
+            if ((sender as CheckBox).Text == "Картошка-фри" && cafe_textbox_amount[2].Enabled == false)
+            {
+                cafe_textbox_amount[2].Enabled = true;
+            }
+            else if ((sender as CheckBox).Text == "Картошка-фри")
+            {
+                cafe_textbox_amount[2].Enabled = false;
+            }
+
+            if ((sender as CheckBox).Text == "Кока-кола" && cafe_textbox_amount[3].Enabled == false)
+            {
+                cafe_textbox_amount[3].Enabled = true;
+            }
+            else if ((sender as CheckBox).Text == "Кока-кола")
+            {
+                cafe_textbox_amount[3].Enabled = false;
+            }
+        }
+
+        public void TextBox_TextChanged(object sender, EventArgs argv)
+        {
+            double result = double.Parse(cafe_label_payment.Text);
+
+            if ((sender as TextBox).Enabled == true)
+            {
+                result += double.Parse((sender as TextBox).Text) * double.Parse(cafe_textbox_price[(int)(sender as TextBox).Tag].Text);
+                cafe_label_payment.Text = result.ToString();
+            }
+        }
+
+        public void TextBox_EnabledChanged(object sender, EventArgs argv)
+        {
+            double result = double.Parse(cafe_label_payment.Text);
+
+            if ((sender as TextBox).Enabled == false)
+            {
+                result -= double.Parse((sender as TextBox).Text) * double.Parse(cafe_textbox_price[(int)(sender as TextBox).Tag].Text);
+                cafe_label_payment.Text = result.ToString();
+            }
+            else if ((sender as TextBox).Enabled == true)
+            {
+                result += double.Parse((sender as TextBox).Text) * double.Parse(cafe_textbox_price[(int)(sender as TextBox).Tag].Text);
+                cafe_label_payment.Text = result.ToString();
+            }
         }
     }
 }
