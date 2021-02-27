@@ -73,7 +73,10 @@ namespace BestOil
 
             this.Controls.Add(group_station);
             #endregion
+
         }
+
+
         public Form1()
         {
             InitializeComponent();

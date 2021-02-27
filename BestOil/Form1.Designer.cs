@@ -58,6 +58,22 @@ namespace BestOil
             station_label_payment_text = new Label();
             #endregion
 
+            #region Инициализация элементов второй группы
+            group_cafe = new GroupBox();
+
+            cafe_check_food.ForEach(i => i = new CheckBox());
+
+            cafe_textbox_price.ForEach(i => i = new TextBox());
+            cafe_label_price_text = new Label();
+
+            cafe_textbox_amount.ForEach(i => i = new TextBox());
+            cafe_label_amount_text = new Label();
+
+            cafe_group_payment = new GroupBox();
+            cafe_label_payment = new Label();
+            cafe_label_payment_text = new Label();
+            #endregion
+
             this.Load += Form_Load;
         }
 
@@ -93,7 +109,7 @@ namespace BestOil
         #endregion
 
         #region Вторая группа элементов - "Кафе"
-        GroupBox cafe_station;
+        GroupBox group_cafe;
 
         List<CheckBox> cafe_check_food = new List<CheckBox>();
 
