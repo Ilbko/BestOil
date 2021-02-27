@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace BestOil
@@ -89,6 +90,22 @@ namespace BestOil
         GroupBox station_group_payment;
         Label station_label_payment;
             Label station_label_payment_text;
+        #endregion
+
+        #region Вторая группа элементов - "Кафе"
+        GroupBox cafe_station;
+
+        List<CheckBox> cafe_check_food = new List<CheckBox>();
+
+        List<TextBox> cafe_textbox_price = new List<TextBox>();
+            Label cafe_label_price_text;
+
+        List<TextBox> cafe_textbox_amount = new List<TextBox>();
+            Label cafe_label_amount_text;
+
+        GroupBox cafe_group_payment;
+        Label cafe_label_payment;
+        Label cafe_label_payment_text;
         #endregion
     }
 }

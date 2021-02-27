@@ -37,12 +37,12 @@ namespace BestOil
             station_group_payment.Size = new Size(group_station.Size.Width - 10, station_group_payment.Height);
             station_group_payment.Text = "К оплате";
 
-            station_combo_fuel.Location = new Point(70, 20);
+            station_combo_fuel.Location = new Point(80, 20);
 
             station_label_fuel_text.Location = new Point(10, 20);
             station_label_fuel_text.Text = "Бензин";
 
-            station_label_fuelprice.Location = new Point(70, 60);
+            station_label_fuelprice.Location = new Point(80, 60);
             station_label_fuelprice.Size = station_combo_fuel.Size;
 
             station_label_fuelprice_text.Location = new Point(10, 60);
