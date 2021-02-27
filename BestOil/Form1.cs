@@ -69,7 +69,7 @@ namespace BestOil
             station_textbox_sum.Location = new Point(station_radio_sum.Location.X + station_textbox_sum.Size.Width + 30, 150);
 
             station_label_payment.Location = new Point(20, 20);
-            station_label_payment.Size = new Size(station_group_payment.Size.Width - 60, station_group_payment.Size.Height - 30);
+            station_label_payment.Size = new Size(station_group_payment.Size.Width - 60, station_group_payment.Size.Height - 40);
             station_label_payment.Font = new Font(FontFamily.GenericSansSerif, 30);
             station_label_payment.Text = "ТЕСТ";
 
@@ -103,7 +103,7 @@ namespace BestOil
             cafe_group_payment.Text = "К оплате";
 
             cafe_label_payment.Location = new Point(20, 20);
-            cafe_label_payment.Size = new Size(cafe_group_payment.Size.Width - 60, cafe_group_payment.Size.Height - 30);
+            cafe_label_payment.Size = new Size(cafe_group_payment.Size.Width - 60, cafe_group_payment.Size.Height - 40);
             cafe_label_payment.Font = new Font(FontFamily.GenericSansSerif, 30);
             cafe_label_payment.Text = "ТЕСТ";
 
@@ -147,6 +147,40 @@ namespace BestOil
             #endregion
         }
 
+        public void ThirdGroup_Init()
+        {
+            #region Работа с элементами третьей группы
+            group_pay.Controls.AddRange(new Control[] {pay_picture, 
+                                                       pay_button, 
+                                                       pay_label_payment, 
+                                                       pay_label_payment_text});
+
+            group_pay.Size = new Size(this.ClientSize.Width - 40, 90);
+            group_pay.Location = new Point(group_station.Location.X, group_station.Location.Y + group_station.Size.Height + 20);
+            group_pay.Text = "Всего к оплате";
+
+            pay_picture.Image = Image.FromFile(@"C:\Users\Илья\source\repos\WinForms_Homework\BestOil\dollar.png");
+            pay_picture.SizeMode = PictureBoxSizeMode.StretchImage;
+            pay_picture.Size = new Size(40, 40);
+            pay_picture.Location = new Point(20, 20);
+
+            pay_button.Size = new Size(100, 50);
+            pay_button.Text = "Рассчитать";
+            pay_button.Location = new Point(150, 20);
+
+            pay_label_payment.Size = new Size(180, 60);
+            pay_label_payment.Location = new Point(group_pay.Size.Width - pay_label_payment.Size.Width - 50, 20);
+            pay_label_payment.Font = new Font(FontFamily.GenericSansSerif, 30);
+            pay_label_payment.Text = "ТЕСТ";
+            
+            pay_label_payment_text.Size = new Size(30, 20);
+            pay_label_payment_text.Location = new Point(group_pay.Size.Width - 50, 20);
+            pay_label_payment_text.Text = "грн.";
+
+            this.Controls.Add(group_pay);
+            #endregion
+        }
+
         public Form1()
         {
             InitializeComponent();
@@ -156,6 +190,7 @@ namespace BestOil
         {
             FirstGroup_Init();
             SecondGroup_Init();
+            ThirdGroup_Init();
         }
     }
 }
