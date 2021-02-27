@@ -12,6 +12,12 @@ namespace BestOil
 {
     public partial class Form1 : Form
     {
+        public struct Loc
+        {
+            public int X;
+            public int Y;
+        }
+
         public void FirstGroup_Init()
         {
             #region Работа с элементами первой группы
@@ -73,9 +79,70 @@ namespace BestOil
 
             this.Controls.Add(group_station);
             #endregion
-
         }
+        public void SecondGroup_Init()
+        {
+            cafe_group_payment.Controls.AddRange(new Control[] {cafe_label_payment,
+                                                                cafe_label_payment_text});
+            group_cafe.Controls.Add(cafe_group_payment);
 
+            cafe_check_food.ForEach(i => group_cafe.Controls.Add(i));
+
+            cafe_textbox_price.ForEach(i => group_cafe.Controls.Add(i));
+            cafe_textbox_amount.ForEach(i => group_cafe.Controls.Add(i));
+            group_cafe.Controls.AddRange(new Control[] {cafe_label_price_text,
+                                                        cafe_label_amount_text});
+
+            group_cafe.Size = new Size(250, 300);
+            group_cafe.Location = new Point(this.ClientSize.Width - group_cafe.Size.Width - 20, 20);
+            group_cafe.Text = "Мини-Кафе";
+
+            cafe_group_payment.Location = new Point(5, group_cafe.Size.Height - cafe_group_payment.Size.Height - 5);
+            cafe_group_payment.Size = new Size(group_cafe.Size.Width - 10, cafe_group_payment.Height);
+            cafe_group_payment.Text = "К оплате";
+
+            cafe_label_payment.Location = new Point(20, 20);
+            cafe_label_payment.Size = new Size(cafe_group_payment.Size.Width - 60, cafe_group_payment.Size.Height - 30);
+            cafe_label_payment.Font = new Font(FontFamily.GenericSansSerif, 30);
+            cafe_label_payment.Text = "ТЕСТ";
+
+            cafe_label_payment_text.Size = new Size(30, 20);
+            cafe_label_payment_text.Location = new Point(cafe_label_payment.Size.Width + 20, cafe_label_payment.Location.Y);
+            cafe_label_payment_text.Text = "грн.";
+
+            Loc loc;
+            loc.X = 5;
+            loc.Y = 30;
+
+            cafe_check_food[0].Text = "Хот-дог";
+            cafe_check_food[1].Text = "Гамбургер";
+            cafe_check_food[2].Text = "Картошка-фри";
+            cafe_check_food[3].Text = "Кока-кола";
+
+            cafe_check_food.ForEach(i => i.Location = new Point(loc.X, loc.Y += 30));
+
+            loc.X = group_cafe.Size.Width / 2;
+            loc.Y = 30;
+
+            cafe_textbox_price.ForEach(i => i.Location = new Point(loc.X, loc.Y += 30));
+            cafe_textbox_price.ForEach(i => i.Size = new Size(50, i.Size.Height));
+
+            cafe_label_price_text.Location = new Point(cafe_textbox_price[0].Location.X, cafe_textbox_price[0].Location.Y - 30);
+            cafe_label_price_text.Text = "Цена";
+            cafe_label_price_text.Size = new Size(40, cafe_label_price_text.Size.Height);
+
+            loc.X = group_cafe.Size.Width / 2 + cafe_textbox_price[0].Size.Width + 10;
+            loc.Y = 30;
+
+            cafe_textbox_amount.ForEach(i => i.Location = new Point(loc.X, loc.Y += 30));
+            cafe_textbox_amount.ForEach(i => i.Size = new Size(50, i.Size.Height));
+
+            cafe_label_amount_text.Location = new Point(cafe_textbox_amount[0].Location.X, cafe_textbox_amount[0].Location.Y - 30);
+            cafe_label_amount_text.Text = "Кол.";
+            cafe_label_amount_text.Size = new Size(40, cafe_label_amount_text.Size.Height);
+
+            this.Controls.Add(group_cafe);
+        }
 
         public Form1()
         {
@@ -85,6 +152,7 @@ namespace BestOil
         public void Form_Load(object sender, EventArgs argv)
         {
             FirstGroup_Init();
+            SecondGroup_Init();
         }
     }
 }

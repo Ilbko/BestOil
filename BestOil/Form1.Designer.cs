@@ -61,12 +61,12 @@ namespace BestOil
             #region Инициализация элементов второй группы
             group_cafe = new GroupBox();
 
-            cafe_check_food.ForEach(i => i = new CheckBox());
+            //cafe_check_food.ForEach(i => i = new CheckBox());
 
-            cafe_textbox_price.ForEach(i => i = new TextBox());
+            //cafe_textbox_price.ForEach(i => i = new TextBox());
             cafe_label_price_text = new Label();
 
-            cafe_textbox_amount.ForEach(i => i = new TextBox());
+            //cafe_textbox_amount.ForEach(i => i = new TextBox());
             cafe_label_amount_text = new Label();
 
             cafe_group_payment = new GroupBox();
@@ -111,12 +111,12 @@ namespace BestOil
         #region Вторая группа элементов - "Кафе"
         GroupBox group_cafe;
 
-        List<CheckBox> cafe_check_food = new List<CheckBox>();
+        List<CheckBox> cafe_check_food = new List<CheckBox>(new CheckBox[4] {new CheckBox(), new CheckBox(), new CheckBox(), new CheckBox()});
 
-        List<TextBox> cafe_textbox_price = new List<TextBox>();
+        List<TextBox> cafe_textbox_price = new List<TextBox>(new TextBox[4] {new TextBox(), new TextBox(), new TextBox(), new TextBox()});
             Label cafe_label_price_text;
 
-        List<TextBox> cafe_textbox_amount = new List<TextBox>();
+        List<TextBox> cafe_textbox_amount = new List<TextBox>(new TextBox[4] { new TextBox(), new TextBox(), new TextBox(), new TextBox() });
             Label cafe_label_amount_text;
 
         GroupBox cafe_group_payment;
