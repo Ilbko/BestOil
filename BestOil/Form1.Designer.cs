@@ -33,8 +33,31 @@ namespace BestOil
         {
             this.components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(600, 600);
             this.Text = "BestOil";
+
+            #region Инициализация элементов первой группы
+            group_station = new GroupBox();
+            station_combo_fuel = new ComboBox();
+            station_label_fuel_text = new Label();
+            station_label_fuelprice = new Label();
+            station_label_fuelprice_text = new Label();
+
+            station_panel_radio = new Panel();
+            station_radio_amount = new RadioButton();
+            station_radio_sum = new RadioButton();
+
+            station_textbox_amount = new TextBox();
+            station_label_amount_text = new Label();
+            station_textbox_sum = new TextBox();
+            station_label_sum_text = new Label();
+
+            station_group_payment = new GroupBox();
+            station_label_payment = new Label();
+            station_label_payment_text = new Label();
+            #endregion
+
+            this.Load += Form_Load;
         }
 
         #endregion
@@ -48,7 +71,7 @@ namespace BestOil
             вывода текста (для описания действия какого-либо элемента), то в своём названии
             он имеет приставку "text".*/
         #region Первая группа элементов - "Автозаправка"
-        Panel panel_station;
+        GroupBox group_station;
         ComboBox station_combo_fuel;
             Label station_label_fuel_text;
         Label station_label_fuelprice;
@@ -63,7 +86,7 @@ namespace BestOil
         TextBox station_textbox_sum;
             Label station_label_sum_text;
 
-        Panel station_panel_payment;
+        GroupBox station_group_payment;
         Label station_label_payment;
             Label station_label_payment_text;
         #endregion
