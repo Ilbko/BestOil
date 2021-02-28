@@ -46,6 +46,7 @@ namespace BestOil
             station_combo_fuel.Location = new Point(80, 20);
             station_combo_fuel.Items.AddRange(new string[] { "A-95", "A-92", "Дизель" });
             station_combo_fuel.SelectedIndexChanged += Combo_SelectedIndexChanged;
+            station_combo_fuel.SelectedIndex = 0;
 
             station_label_fuel_text.Location = new Point(10, 20);
             station_label_fuel_text.Text = "Бензин";
@@ -62,15 +63,26 @@ namespace BestOil
 
             station_radio_amount.Location = new Point(5, station_panel_radio.Size.Height / 8);
             station_radio_amount.Text = "Количество (л)";
+            station_radio_amount.Tag = 0;
             station_radio_amount.Checked = true;
+            station_radio_amount.CheckedChanged += Radio_CheckedChanged;
 
             station_textbox_amount.Location = new Point(station_radio_amount.Location.X + station_textbox_amount.Size.Width + 30, 110);
+            station_textbox_amount.Tag = 0;
+            station_textbox_amount.Name = "0";
+            station_textbox_amount.TextChanged += Station_TextBox_TextChanged;
+            station_textbox_amount.EnabledChanged += Station_TextBox_EnabledChanged;
 
             station_radio_sum.Location = new Point(5, station_panel_radio.Size.Height - station_panel_radio.Size.Height / 8 - station_radio_sum.Size.Height);
             station_radio_sum.Text = "Сумма (грн.)";
+            station_radio_sum.Tag = 1;
 
             station_textbox_sum.Location = new Point(station_radio_sum.Location.X + station_textbox_sum.Size.Width + 30, 150);
             station_textbox_sum.Enabled = false;
+            station_textbox_sum.Tag = 1;
+            station_textbox_sum.Name = "0";
+            station_textbox_sum.TextChanged += Station_TextBox_TextChanged;
+            station_textbox_sum.TextChanged += Station_TextBox_EnabledChanged;
 
             station_label_payment.Location = new Point(20, 20);
             station_label_payment.Size = new Size(station_group_payment.Size.Width - 60, station_group_payment.Size.Height - 40);
@@ -152,8 +164,8 @@ namespace BestOil
             cafe_textbox_amount.ForEach(i => i.Size = new Size(50, i.Size.Height));
             cafe_textbox_amount.ForEach(i => i.Text = "0");
             cafe_textbox_amount.ForEach(i => i.Enabled = false);
-            cafe_textbox_amount.ForEach(i => i.TextChanged += TextBox_TextChanged);
-            cafe_textbox_amount.ForEach(i => i.EnabledChanged += TextBox_EnabledChanged);
+            cafe_textbox_amount.ForEach(i => i.TextChanged += Cafe_TextBox_TextChanged);
+            cafe_textbox_amount.ForEach(i => i.EnabledChanged += Cafe_TextBox_EnabledChanged);
             cafe_textbox_amount.ForEach(i => i.Name = "0");
 
             cafe_textbox_amount[0].Tag = 0;
@@ -256,7 +268,7 @@ namespace BestOil
             }
         }
 
-        public void TextBox_TextChanged(object sender, EventArgs argv)
+        public void Cafe_TextBox_TextChanged(object sender, EventArgs argv)
         {
             double result = double.Parse(cafe_label_payment.Text);
 
@@ -270,7 +282,7 @@ namespace BestOil
             }
         }
 
-        public void TextBox_EnabledChanged(object sender, EventArgs argv)
+        public void Cafe_TextBox_EnabledChanged(object sender, EventArgs argv)
         {
             double result = double.Parse(cafe_label_payment.Text);
 
@@ -286,9 +298,91 @@ namespace BestOil
             }
         }
 
-        public void Combo_SelectedIndexChanged(object sender, EventArgs e)
+        public void Combo_SelectedIndexChanged(object sender, EventArgs argv)
         {
-            throw new NotImplementedException();
+            switch ((sender as ComboBox).SelectedIndex)
+            {
+                case 0:
+                    {
+                        station_label_fuelprice.Text = "28,22";
+                        break;
+                    }
+                case 1:
+                    {
+                        station_label_fuelprice.Text = "27,21";
+                        break;
+                    }
+                case 2:
+                    {
+                        station_label_fuelprice.Text = "27,63";
+                        break;
+                    }
+            }
+        }
+
+        public void Radio_CheckedChanged(object sender, EventArgs argv)
+        {
+            if ((int)(sender as RadioButton).Tag == 0 && (sender as RadioButton).Checked == false)
+            {
+                station_group_payment.Text = "К выдаче";
+                station_label_payment_text.Text = "л.";
+
+                station_textbox_amount.Enabled = false;
+                station_textbox_sum.Enabled = true;
+            }
+            else if ((int)(sender as RadioButton).Tag == 0 && (sender as RadioButton).Checked == true)
+            {
+                station_group_payment.Text = "К оплате";
+                station_label_payment_text.Text = "грн.";
+
+                station_textbox_amount.Enabled = true;
+                station_textbox_sum.Enabled = false;
+            }
+        }
+
+        public void Station_TextBox_TextChanged(object sender, EventArgs argv)
+        {
+            double result = double.Parse(station_label_payment.Text);
+
+            if ((int)(sender as TextBox).Tag == 0)
+            {
+                result -= double.Parse((sender as TextBox).Name) * double.Parse(station_label_fuelprice.Text);
+                result += double.Parse((sender as TextBox).Text) * double.Parse(station_label_fuelprice.Text);
+                station_label_payment.Text = result.ToString();
+
+                (sender as TextBox).Name = (sender as TextBox).Text;
+            }
+            else if ((int)(sender as TextBox).Tag == 1)
+            {
+                result -= double.Parse((sender as TextBox).Name) / double.Parse(station_label_fuelprice.Text);
+                result += double.Parse((sender as TextBox).Text) / double.Parse(station_label_fuelprice.Text);
+                station_label_payment.Text = result.ToString();
+
+                (sender as TextBox).Name = (sender as TextBox).Text;
+            }
+        }
+
+        public void Station_TextBox_EnabledChanged(object sender, EventArgs argv)
+        {
+            double result = double.Parse(station_label_payment.Text);
+
+            if ((int)(sender as TextBox).Tag == 0)
+            {
+                if ((sender as TextBox).Enabled == false)
+                {
+                    result = 0;
+                    station_textbox_sum.Text = "0";
+                    station_textbox_amount.Text = "0";
+                    station_label_payment.Text = result.ToString();
+                }
+                else if ((sender as TextBox).Enabled == true)
+                {
+                    result = 0;
+                    station_textbox_amount.Text = "0";
+                    station_textbox_sum.Text = "0";
+                    station_label_payment.Text = result.ToString();
+                }
+            }
         }
     }
 }
