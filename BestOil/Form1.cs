@@ -44,6 +44,8 @@ namespace BestOil
             station_group_payment.Text = "К оплате";
 
             station_combo_fuel.Location = new Point(80, 20);
+            station_combo_fuel.Items.AddRange(new string[] { "A-95", "A-92", "Дизель" });
+            station_combo_fuel.SelectedIndexChanged += Combo_SelectedIndexChanged;
 
             station_label_fuel_text.Location = new Point(10, 20);
             station_label_fuel_text.Text = "Бензин";
@@ -83,6 +85,7 @@ namespace BestOil
             this.Controls.Add(group_station);
             #endregion
         }
+
         public void SecondGroup_Init()
         {
             #region Работа с элементами второй группы
@@ -151,6 +154,7 @@ namespace BestOil
             cafe_textbox_amount.ForEach(i => i.Enabled = false);
             cafe_textbox_amount.ForEach(i => i.TextChanged += TextBox_TextChanged);
             cafe_textbox_amount.ForEach(i => i.EnabledChanged += TextBox_EnabledChanged);
+            cafe_textbox_amount.ForEach(i => i.Name = "0");
 
             cafe_textbox_amount[0].Tag = 0;
             cafe_textbox_amount[1].Tag = 1;
@@ -178,7 +182,7 @@ namespace BestOil
             group_pay.Location = new Point(group_station.Location.X, group_station.Location.Y + group_station.Size.Height + 20);
             group_pay.Text = "Всего к оплате";
 
-            pay_picture.Image = Image.FromFile(@"C:\Users\Илья\source\repos\WinForms_Homework\BestOil\dollar.png");
+            pay_picture.Image = Image.FromFile(@"C:\Users\Илья\source\repos\WinForms_Homework\(8)BestOil\dollar.png");
             pay_picture.SizeMode = PictureBoxSizeMode.StretchImage;
             pay_picture.Size = new Size(40, 40);
             pay_picture.Location = new Point(20, 20);
@@ -258,8 +262,11 @@ namespace BestOil
 
             if ((sender as TextBox).Enabled == true)
             {
+                result -= double.Parse((sender as TextBox).Name) * double.Parse(cafe_textbox_price[(int)(sender as TextBox).Tag].Text);
                 result += double.Parse((sender as TextBox).Text) * double.Parse(cafe_textbox_price[(int)(sender as TextBox).Tag].Text);
                 cafe_label_payment.Text = result.ToString();
+
+                (sender as TextBox).Name = (sender as TextBox).Text;
             }
         }
 
@@ -277,6 +284,11 @@ namespace BestOil
                 result += double.Parse((sender as TextBox).Text) * double.Parse(cafe_textbox_price[(int)(sender as TextBox).Tag].Text);
                 cafe_label_payment.Text = result.ToString();
             }
+        }
+
+        public void Combo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }
