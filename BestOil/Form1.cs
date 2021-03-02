@@ -12,6 +12,7 @@ namespace BestOil
 {
     public partial class Form1 : Form
     {
+        //Переменная, которая хранит всю выручку за время работы программы и таймер 
         double total_sum = 0;
         Timer timer;
         public struct Loc
@@ -146,6 +147,11 @@ namespace BestOil
             cafe_check_food.ForEach(i => i.Location = new Point(loc.X, loc.Y += 30));
             cafe_check_food.ForEach(i => i.CheckedChanged += CheckBox_CheckedChanged);
 
+            cafe_check_food[0].Tag = 0;
+            cafe_check_food[1].Tag = 1;
+            cafe_check_food[2].Tag = 2;
+            cafe_check_food[3].Tag = 3;
+
             loc.X = group_cafe.Size.Width / 2;
             loc.Y = 30;
 
@@ -229,29 +235,36 @@ namespace BestOil
 
         public void Form_Load(object sender, EventArgs argv)
         {
+            //Позиционирование, изменение параметров и подписка на события происходят в этих методах. Каждая группа элементов находится в личном методе
             FirstGroup_Init();
             SecondGroup_Init();
             ThirdGroup_Init();
 
+            //Выделение памяти таймеру, установка интервала(10 сек) для возврата формы в изначальное положение и подписка на событие
             timer = new Timer();
-            timer.Interval = 1000;
+            timer.Interval = 10000;
             timer.Tick += Timer_Tick;
         }
 
+        //Событие тика таймера
         public void Timer_Tick(object sender, EventArgs e)
         {
+            //Остановка таймера
             timer.Stop();
 
+            //Если пользователь отказался вернуть форму в изначальное положение, то через 10 секунд программа предложит ему вернуть форму ещё раз
             if (MessageBox.Show("Вернуть форму в изначальное положение?", "Приложение", MessageBoxButtons.YesNo) == DialogResult.No)
             {
                 timer.Enabled = true;
             }
             else
             {
+                //Вызывается метод для возврата элементов формы в изначальное значение
                 Init();
             }
         }
 
+        //Метод для возврата элементов формы к изначальным значениям
         public void Init()
         {
             station_combo_fuel.SelectedIndex = 0;
@@ -265,88 +278,117 @@ namespace BestOil
             station_label_payment.Text = "0,00";
         }
 
+        //Событие при закрытии формы
         public void Form_Closing(object sender, FormClosingEventArgs argv)
         {
+            //При закрытии формы выводится сообщение с дневной выручкой
             MessageBox.Show($"Дневная выручка за сегодня: {total_sum} грн.", "Закрытие", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        //Событие изменения состояния чекбокса
         public void CheckBox_CheckedChanged(object sender, EventArgs argv)
         {
-            if ((sender as CheckBox).Text == "Хот-дог" && cafe_textbox_amount[0].Enabled == false)
-            {
-                cafe_textbox_amount[0].Enabled = true;
-            }
-            else if ((sender as CheckBox).Text == "Хот-дог") 
-            {
-                cafe_textbox_amount[0].Enabled = false;
-            }
+            //if ((sender as CheckBox).Text == "Хот-дог" && cafe_textbox_amount[0].Enabled == false)
+            //{
+            //    cafe_textbox_amount[0].Enabled = true;
+            //}
+            //else if ((sender as CheckBox).Text == "Хот-дог") 
+            //{
+            //    cafe_textbox_amount[0].Enabled = false;
+            //}
 
-            if ((sender as CheckBox).Text == "Гамбургер" && cafe_textbox_amount[1].Enabled == false)
-            {
-                cafe_textbox_amount[1].Enabled = true;
-            }
-            else if ((sender as CheckBox).Text == "Гамбургер")
-            {
-                cafe_textbox_amount[1].Enabled = false;
-            }
+            //if ((sender as CheckBox).Text == "Гамбургер" && cafe_textbox_amount[1].Enabled == false)
+            //{
+            //    cafe_textbox_amount[1].Enabled = true;
+            //}
+            //else if ((sender as CheckBox).Text == "Гамбургер")
+            //{
+            //    cafe_textbox_amount[1].Enabled = false;
+            //}
 
-            if ((sender as CheckBox).Text == "Картошка-фри" && cafe_textbox_amount[2].Enabled == false)
-            {
-                cafe_textbox_amount[2].Enabled = true;
-            }
-            else if ((sender as CheckBox).Text == "Картошка-фри")
-            {
-                cafe_textbox_amount[2].Enabled = false;
-            }
+            //if ((sender as CheckBox).Text == "Картошка-фри" && cafe_textbox_amount[2].Enabled == false)
+            //{
+            //    cafe_textbox_amount[2].Enabled = true;
+            //}
+            //else if ((sender as CheckBox).Text == "Картошка-фри")
+            //{
+            //    cafe_textbox_amount[2].Enabled = false;
+            //}
 
-            if ((sender as CheckBox).Text == "Кока-кола" && cafe_textbox_amount[3].Enabled == false)
+            //if ((sender as CheckBox).Text == "Кока-кола" && cafe_textbox_amount[3].Enabled == false)
+            //{
+            //    cafe_textbox_amount[3].Enabled = true;
+            //}
+            //else if ((sender as CheckBox).Text == "Кока-кола")
+            //{
+            //    cafe_textbox_amount[3].Enabled = false;
+            //}
+
+            //Списки текстбоксов и чекбоксов имеют в тегах свой индекс списка, что позволяет им взаимодействовать друг с другом.
+            //Если текстбокс, тег которого совпадает с соответствующим ему чекбоксом, выключен, то текстбокс включается.
+            if (cafe_textbox_amount[(int)(sender as CheckBox).Tag].Enabled == false)
             {
-                cafe_textbox_amount[3].Enabled = true;
+                cafe_textbox_amount[(int)(sender as CheckBox).Tag].Enabled = true;
             }
-            else if ((sender as CheckBox).Text == "Кока-кола")
+            else
             {
-                cafe_textbox_amount[3].Enabled = false;
-            }
+                cafe_textbox_amount[(int)(sender as CheckBox).Tag].Enabled = false;
+            }                
         }
 
+        //Событие изменения текста в текстбоксах группы кафе
         public void Cafe_TextBox_TextChanged(object sender, EventArgs argv)
         {
+            //Переменная для хранения значения денег с лейбла оплаты кафе
             double result = double.Parse(cafe_label_payment.Text);
 
+            //Если текстбокс вклюён
             if ((sender as TextBox).Enabled == true)
             {
+                //Блок try catch для предотвращения исключения при неудачном парсе
                 try
                 {
+                    //В имени текстбокса хранится предыдущее значение, которое было там написано. Сделано это для того, чтобы можно было
+                    //корректно взаимодействовать с лейблом оплаты (отнимать, к примеру)
+
+                    //При изменении текста от результата отнимается его предыдущее значение
+                    //Цена предмета берётся с неизменяемого текстбокса с совпадающим тегом (тег - индекс массива)
                     result -= double.Parse((sender as TextBox).Name) * double.Parse(cafe_textbox_price[(int)(sender as TextBox).Tag].Text);
+                    //и прибавляется текущее
                     result += double.Parse((sender as TextBox).Text) * double.Parse(cafe_textbox_price[(int)(sender as TextBox).Tag].Text);
 
                     (sender as TextBox).Name = (sender as TextBox).Text;
                 }
                 catch (System.FormatException e) 
-                { 
+                {
+                    //Если парс не удался, то имя устанавливается нулём. Позволяет не уходить в отрицательную цену
                     (sender as TextBox).Name = "0"; 
                 }
-                cafe_label_payment.Text = result.ToString();
-       
+
+                //После всех операций новая цена записывается в лейбл оплаты
+                cafe_label_payment.Text = result.ToString();       
             }
         }
 
+        //Событие изменения включённости текстбокса
         public void Cafe_TextBox_EnabledChanged(object sender, EventArgs argv)
         {
             double result = double.Parse(cafe_label_payment.Text);
 
+            //Если текстбокс был выключен (достигается посредством откликивания соответсвующего чекбокса), то его значение отнимается от 
+            //общей цены и наоборот.
             try
             {
                 if ((sender as TextBox).Enabled == false)
                 {
                     result -= double.Parse((sender as TextBox).Text) * double.Parse(cafe_textbox_price[(int)(sender as TextBox).Tag].Text);
-                    cafe_label_payment.Text = result.ToString();
                 }
                 else if ((sender as TextBox).Enabled == true)
                 {
                     result += double.Parse((sender as TextBox).Text) * double.Parse(cafe_textbox_price[(int)(sender as TextBox).Tag].Text);
-                    cafe_label_payment.Text = result.ToString();
                 }
+
+                cafe_label_payment.Text = result.ToString();
             }
             catch (System.FormatException e)
             {
@@ -354,8 +396,10 @@ namespace BestOil
             }
         }
 
+        //Событие изменения типа топлива в комбобоксе
         public void Combo_SelectedIndexChanged(object sender, EventArgs argv)
         {
+            //Все значения с текстбоксов заправки для удобства обнуляются
             station_textbox_sum.Text = "0";
             station_textbox_amount.Text = "0";
             switch ((sender as ComboBox).SelectedIndex)
@@ -378,8 +422,12 @@ namespace BestOil
             }
         }
 
+        //Событие изменения выбора радиокнопки
         public void Radio_CheckedChanged(object sender, EventArgs argv)
         {
+            //Поскольку кнопок только две, то условия можно строить с учётом только одной кнопки.
+            //Если первая кнопка отжата, это значит, что покупатель будет заправляться по деньгам, а не по литрам.
+            //Соответствующие текстбоксы будут выключаться и включаться.
             if ((int)(sender as RadioButton).Tag == 0 && (sender as RadioButton).Checked == false)
             {
                 station_group_payment.Text = "К выдаче";
@@ -398,11 +446,15 @@ namespace BestOil
             }
         }
 
+        //Событие изменения текста текстбоксов группы заправки
         public void Station_TextBox_TextChanged(object sender, EventArgs argv)
         {
+            //Используется тип данных decimal вместо double, потому что это - 
+            //0,3... - 0,3... = -2,...
             //double result = double.Parse(station_label_payment.Text);
             decimal result = decimal.Parse(station_label_payment.Text);
 
+            //Первый текстбокс отвечает за количество топлива в литрах, второй - за литры в деньгах.
             if ((int)(sender as TextBox).Tag == 0)
             {
                 try
@@ -416,19 +468,12 @@ namespace BestOil
                 {
                     (sender as TextBox).Name = "0";
                 }
-                station_label_payment.Text = result.ToString();
-
             }
             else if ((int)(sender as TextBox).Tag == 1)
             {
                 try
                 {
-                    //decimal foo = decimal.Parse((sender as TextBox).Name) / decimal.Parse(station_label_fuelprice.Text);
-                    //decimal result_2 = result;
-
                     result -= decimal.Parse((sender as TextBox).Name) / decimal.Parse(station_label_fuelprice.Text);
-                    //this.Text = $"{result_2} - {foo} = {result}";
-                    //result += double.Parse((sender as TextBox).Text) / double.Parse(station_label_fuelprice.Text);
                     result += decimal.Parse((sender as TextBox).Text) / decimal.Parse(station_label_fuelprice.Text);
 
                     (sender as TextBox).Name = (sender as TextBox).Text;
@@ -437,45 +482,51 @@ namespace BestOil
                 {
                     (sender as TextBox).Name = "0";
                 }
-                station_label_payment.Text = result.ToString();
-
             }
+            station_label_payment.Text = result.ToString();
         }
 
+        //Событие изменения включённости текстбокса группы заправки
         public void Station_TextBox_EnabledChanged(object sender, EventArgs argv)
         {
             double result = double.Parse(station_label_payment.Text);
 
+            //В зависимости от состояния первого текстбокса обнуляются два текстбокса заправки для удобства
             if ((int)(sender as TextBox).Tag == 0)
             {
                 if ((sender as TextBox).Enabled == false)
                 {
-                    result = 0;
                     station_textbox_amount.Text = "0";
-                    station_label_payment.Text = result.ToString();
                 }
                 else if ((sender as TextBox).Enabled == true)
                 {
-                    result = 0;
                     station_textbox_sum.Text = "0";
-                    station_label_payment.Text = result.ToString();
                 }
+
+                result = 0;
+                station_label_payment.Text = result.ToString();
             }
         }
 
+        //Событие клика по кнопке расчёта
         public void Button_Click(object sender, EventArgs argv)
         {
+            //Если текстбокс для оплаты топлива по литрам включён, то
             if (station_textbox_amount.Enabled == true)
             {
+                //сумму можно посчитать с лейблов оплаты кафе и заправки.
                 pay_label_payment.Text = (double.Parse(station_label_payment.Text) + double.Parse(cafe_label_payment.Text)).ToString();
             }
             else
             {
+                //сумму нужно считать с текстбокса суммы заправки (потому что лейбл оплаты заправки сейчас отображает литры) и лейбла оплаты кафе.
                 pay_label_payment.Text = (double.Parse(station_textbox_sum.Text) + double.Parse(cafe_label_payment.Text)).ToString();
             }
 
+            //Сумма дневной выручки увеличивается
             total_sum += double.Parse(pay_label_payment.Text);
 
+            //Запускается таймер (для предложения вернуть форму в изначальное положение)
             timer.Start();
         }
     }

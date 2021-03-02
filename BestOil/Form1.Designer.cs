@@ -34,7 +34,14 @@ namespace BestOil
         {
             this.components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(600, 470);
+            this.ClientSize = new System.Drawing.Size(600, 450);
+
+            //Установка максимально и минимально возможных размеров окна для предотвращения его изменения
+            this.MaximumSize = new System.Drawing.Size(this.Size.Width, this.Size.Height);
+            this.MinimumSize = new System.Drawing.Size(this.Size.Width, this.Size.Height);
+            //Из панели инструментов на форме доступен только крестик
+            this.FormBorderStyle = FormBorderStyle.FixedToolWindow;
+
             this.Text = "BestOil";
 
             #region Инициализация элементов первой группы
