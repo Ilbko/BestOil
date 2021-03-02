@@ -86,6 +86,7 @@ namespace BestOil
             #endregion
 
             this.Load += Form_Load;
+            this.FormClosing += Form_Closing;
         }
 
         #endregion

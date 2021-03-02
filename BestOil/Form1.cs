@@ -12,6 +12,8 @@ namespace BestOil
 {
     public partial class Form1 : Form
     {
+        double total_sum = 0;
+        Timer timer;
         public struct Loc
         {
             public int X;
@@ -72,6 +74,7 @@ namespace BestOil
             station_textbox_amount.Name = "0";
             station_textbox_amount.TextChanged += Station_TextBox_TextChanged;
             station_textbox_amount.EnabledChanged += Station_TextBox_EnabledChanged;
+            station_textbox_amount.Text = "0";
 
             station_radio_sum.Location = new Point(5, station_panel_radio.Size.Height - station_panel_radio.Size.Height / 8 - station_radio_sum.Size.Height);
             station_radio_sum.Text = "Сумма (грн.)";
@@ -83,6 +86,7 @@ namespace BestOil
             station_textbox_sum.Name = "0";
             station_textbox_sum.TextChanged += Station_TextBox_TextChanged;
             station_textbox_sum.TextChanged += Station_TextBox_EnabledChanged;
+            station_textbox_sum.Text = "0";
 
             station_label_payment.Location = new Point(20, 20);
             station_label_payment.Size = new Size(station_group_payment.Size.Width - 60, station_group_payment.Size.Height - 40);
@@ -202,6 +206,7 @@ namespace BestOil
             pay_button.Size = new Size(100, 50);
             pay_button.Text = "Рассчитать";
             pay_button.Location = new Point(150, 20);
+            pay_button.Click += Button_Click;
 
             pay_label_payment.Size = new Size(180, 60);
             pay_label_payment.Location = new Point(group_pay.Size.Width - pay_label_payment.Size.Width - 50, 20);
@@ -227,6 +232,42 @@ namespace BestOil
             FirstGroup_Init();
             SecondGroup_Init();
             ThirdGroup_Init();
+
+            timer = new Timer();
+            timer.Interval = 1000;
+            timer.Tick += Timer_Tick;
+        }
+
+        public void Timer_Tick(object sender, EventArgs e)
+        {
+            timer.Stop();
+
+            if (MessageBox.Show("Вернуть форму в изначальное положение?", "Приложение", MessageBoxButtons.YesNo) == DialogResult.No)
+            {
+                timer.Enabled = true;
+            }
+            else
+            {
+                Init();
+            }
+        }
+
+        public void Init()
+        {
+            station_combo_fuel.SelectedIndex = 0;
+            station_label_payment.Text = "0,00";
+            cafe_textbox_amount.ForEach(i => i.Text = "0");
+            cafe_check_food.ForEach(i => i.Checked = false);
+            cafe_label_payment.Text = "0,00";
+            pay_label_payment.Text = "0,00";
+            station_textbox_sum.Text = "0";
+            station_textbox_amount.Text = "0";
+            station_label_payment.Text = "0,00";
+        }
+
+        public void Form_Closing(object sender, FormClosingEventArgs argv)
+        {
+            MessageBox.Show($"Дневная выручка за сегодня: {total_sum} грн.", "Закрытие", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public void CheckBox_CheckedChanged(object sender, EventArgs argv)
@@ -274,11 +315,19 @@ namespace BestOil
 
             if ((sender as TextBox).Enabled == true)
             {
-                result -= double.Parse((sender as TextBox).Name) * double.Parse(cafe_textbox_price[(int)(sender as TextBox).Tag].Text);
-                result += double.Parse((sender as TextBox).Text) * double.Parse(cafe_textbox_price[(int)(sender as TextBox).Tag].Text);
-                cafe_label_payment.Text = result.ToString();
+                try
+                {
+                    result -= double.Parse((sender as TextBox).Name) * double.Parse(cafe_textbox_price[(int)(sender as TextBox).Tag].Text);
+                    result += double.Parse((sender as TextBox).Text) * double.Parse(cafe_textbox_price[(int)(sender as TextBox).Tag].Text);
 
-                (sender as TextBox).Name = (sender as TextBox).Text;
+                    (sender as TextBox).Name = (sender as TextBox).Text;
+                }
+                catch (System.FormatException e) 
+                { 
+                    (sender as TextBox).Name = "0"; 
+                }
+                cafe_label_payment.Text = result.ToString();
+       
             }
         }
 
@@ -286,20 +335,29 @@ namespace BestOil
         {
             double result = double.Parse(cafe_label_payment.Text);
 
-            if ((sender as TextBox).Enabled == false)
+            try
             {
-                result -= double.Parse((sender as TextBox).Text) * double.Parse(cafe_textbox_price[(int)(sender as TextBox).Tag].Text);
-                cafe_label_payment.Text = result.ToString();
+                if ((sender as TextBox).Enabled == false)
+                {
+                    result -= double.Parse((sender as TextBox).Text) * double.Parse(cafe_textbox_price[(int)(sender as TextBox).Tag].Text);
+                    cafe_label_payment.Text = result.ToString();
+                }
+                else if ((sender as TextBox).Enabled == true)
+                {
+                    result += double.Parse((sender as TextBox).Text) * double.Parse(cafe_textbox_price[(int)(sender as TextBox).Tag].Text);
+                    cafe_label_payment.Text = result.ToString();
+                }
             }
-            else if ((sender as TextBox).Enabled == true)
+            catch (System.FormatException e)
             {
-                result += double.Parse((sender as TextBox).Text) * double.Parse(cafe_textbox_price[(int)(sender as TextBox).Tag].Text);
-                cafe_label_payment.Text = result.ToString();
+                (sender as TextBox).Text = "0";
             }
         }
 
         public void Combo_SelectedIndexChanged(object sender, EventArgs argv)
         {
+            station_textbox_sum.Text = "0";
+            station_textbox_amount.Text = "0";
             switch ((sender as ComboBox).SelectedIndex)
             {
                 case 0:
@@ -342,23 +400,45 @@ namespace BestOil
 
         public void Station_TextBox_TextChanged(object sender, EventArgs argv)
         {
-            double result = double.Parse(station_label_payment.Text);
+            //double result = double.Parse(station_label_payment.Text);
+            decimal result = decimal.Parse(station_label_payment.Text);
 
             if ((int)(sender as TextBox).Tag == 0)
             {
-                result -= double.Parse((sender as TextBox).Name) * double.Parse(station_label_fuelprice.Text);
-                result += double.Parse((sender as TextBox).Text) * double.Parse(station_label_fuelprice.Text);
+                try
+                {
+                    result -= decimal.Parse((sender as TextBox).Name) * decimal.Parse(station_label_fuelprice.Text);
+                    result += decimal.Parse((sender as TextBox).Text) * decimal.Parse(station_label_fuelprice.Text);
+
+                    (sender as TextBox).Name = (sender as TextBox).Text;
+                }
+                catch (System.FormatException e) 
+                {
+                    (sender as TextBox).Name = "0";
+                }
                 station_label_payment.Text = result.ToString();
 
-                (sender as TextBox).Name = (sender as TextBox).Text;
             }
             else if ((int)(sender as TextBox).Tag == 1)
             {
-                result -= double.Parse((sender as TextBox).Name) / double.Parse(station_label_fuelprice.Text);
-                result += double.Parse((sender as TextBox).Text) / double.Parse(station_label_fuelprice.Text);
+                try
+                {
+                    //decimal foo = decimal.Parse((sender as TextBox).Name) / decimal.Parse(station_label_fuelprice.Text);
+                    //decimal result_2 = result;
+
+                    result -= decimal.Parse((sender as TextBox).Name) / decimal.Parse(station_label_fuelprice.Text);
+                    //this.Text = $"{result_2} - {foo} = {result}";
+                    //result += double.Parse((sender as TextBox).Text) / double.Parse(station_label_fuelprice.Text);
+                    result += decimal.Parse((sender as TextBox).Text) / decimal.Parse(station_label_fuelprice.Text);
+
+                    (sender as TextBox).Name = (sender as TextBox).Text;
+                }
+                catch (System.FormatException e) 
+                {
+                    (sender as TextBox).Name = "0";
+                }
                 station_label_payment.Text = result.ToString();
 
-                (sender as TextBox).Name = (sender as TextBox).Text;
             }
         }
 
@@ -371,18 +451,32 @@ namespace BestOil
                 if ((sender as TextBox).Enabled == false)
                 {
                     result = 0;
-                    station_textbox_sum.Text = "0";
                     station_textbox_amount.Text = "0";
                     station_label_payment.Text = result.ToString();
                 }
                 else if ((sender as TextBox).Enabled == true)
                 {
                     result = 0;
-                    station_textbox_amount.Text = "0";
                     station_textbox_sum.Text = "0";
                     station_label_payment.Text = result.ToString();
                 }
             }
+        }
+
+        public void Button_Click(object sender, EventArgs argv)
+        {
+            if (station_textbox_amount.Enabled == true)
+            {
+                pay_label_payment.Text = (double.Parse(station_label_payment.Text) + double.Parse(cafe_label_payment.Text)).ToString();
+            }
+            else
+            {
+                pay_label_payment.Text = (double.Parse(station_textbox_sum.Text) + double.Parse(cafe_label_payment.Text)).ToString();
+            }
+
+            total_sum += double.Parse(pay_label_payment.Text);
+
+            timer.Start();
         }
     }
 }
